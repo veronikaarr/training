@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Задание от Кирилла: Напишите функцию чисел фибоначи на Python.
@@ -13,5 +13,8 @@ def Fibonacci(n):
         b = c
 
 if __name__ == '__main__':
-    for i in Fibonacci(eval(input("Введите число -> "))):
-        print(i)
+    try:
+        for i in Fibonacci(int(input("Введите число -> "))):
+           print(i)
+    except ValueError:
+        print("Это не цифра!")
