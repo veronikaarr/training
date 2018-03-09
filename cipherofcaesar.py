@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import string
 
 #function encoder
+#adds a key in the letters and print
 def encoder(text, key):
     for q in text:
         if q.isalpha():
@@ -12,8 +12,14 @@ def encoder(text, key):
 
 #function decoder
 def decoder(text):
-    letter = max(string.ascii_lowercase, key=lambda ch: text.lower().count(ch)) #ищет наиболее часто встречающуюся букву
-    print(letter)
+    letter = max(string.ascii_lowercase, key=lambda ch: text.lower().count(ch)) #find most popular letter
+    key = ord(letter.lower())-101 #compare with 'e'
+    for letters in text:
+        if ord(letters)<64 and ord(letters)>91:  #if letter in the text in uppercase
+            deletters = ord(letters) - 32 - key
+        else:
+            deletters = ord(letters) - key
+        print(chr(deletters), end='')
 
 if __name__ == '__main__':
     try:
