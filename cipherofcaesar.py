@@ -2,16 +2,14 @@
 
 import string
 
-#function encoder
-#adds a key in the letters and print
 def encoder(text, key):
-    for q in text:
-        if q.isalpha():
-            print(chr(ord(q)+key),end='')
-    print('\n')
+    "Function encoder. Adds a key in the letters and print"
+    text.split()
+    print(''.join(
+        list(map(lambda x: chr(ord(x) + key) if x.isalpha() else x, text))))
 
-#function decoder
 def decoder(text):
+    "Function decoder"
     letter = max(string.ascii_lowercase, key=lambda ch: text.lower().count(ch)) #find most popular letter
     key = ord(letter.lower())-101 #compare with 'e'
     for letters in text:
@@ -23,7 +21,7 @@ def decoder(text):
 
 if __name__ == '__main__':
     try:
-        flag = int(input("Enter 1 if you need an encoder, 2 if the decoder --> "))
+        flag = int(input("Enter 1 if you need an encoder, 2 if a decoder --> "))
         if flag == 1:
             text = input("Enter the string --> ")
             key = int(input("Enter the key --> "))
