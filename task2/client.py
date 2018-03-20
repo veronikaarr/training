@@ -1,11 +1,17 @@
-#ето на основе zeromq
+#!/usr/bin/env python
+import pika
 
-import zmq
-context = zmq.Context()
-socket = context.socket(zmq.SUB)
-socket.connect("tcp://127.0.0.1:5000")
-socket.setsockopt(zmq.SUBSCRIBE, "netherlands")
-socket.setsockopt(zmq.SUBSCRIBE, "germany")
+connection = pika.BlockingConnection(pika.ConnectionParameters(
+        host='localhost'))
+channel = connection.channel()
 
-while True:
-    print  socket.recv()
+print(' [*] Waiting for messages. To exit press CTRL+C')
+
+def callback(ch, method, properties, body):
+    print(" [x] Received %r" % (body,))  #получение сообщений - подписка
+
+channel.basic_consume(callback,
+                      queue='hello', #наша callback функция будет получать сообщения из очереди с именем hello
+                      no_ack=True)
+
+channel.start_consuming() #запускаем бесконечную очередь

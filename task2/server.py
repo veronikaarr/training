@@ -1,15 +1,16 @@
-#ето на основе zeromq
+#!/usr/bin/env python3
+import pika
 
-import zmq
-from random import choice
-context = zmq.Context()
-socket = context.socket(zmq.PUB)
-socket.bind("tcp://127.0.0.1:5000")
+connection = pika.BlockingConnection(pika.ConnectionParameters(
+               'localhost'))  #подключились к брокеру сообщений, находящемся на локальном хосте
+channel = connection.channel()
 
-countries = ['netherlands','brazil','germany','portugal']
-events = ['yellow card', 'red card', 'goal', 'corner', 'foul']
+channel.queue_declare(queue='hello')  #создали очередь с именем хеллоу
 
-while True:
-    msg = choice( countries ) +" "+ choice( events )
-    print ' ->' ,msg
-    socket.send( msg )
+channel.basic_publish(exchange='',
+                      routing_key='hello',
+                      body='Hello World!')  #отправили сообщение в очередь через точку обмена exchange в очередь hello
+#c телом Hello Worls - ?
+
+print(" [x] Sent 'Hello World!'") #
+connection.close()
