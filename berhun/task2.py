@@ -10,8 +10,12 @@ import numpy as np
 with open('82-1.csv', "r", encoding='utf-8') as f:
     reader = csv.reader(f)
     your_list = list(reader)
+    your_list_iter = list(your_list)
+    R = list(your_list)
     for i in range(len(your_list)):
         your_list[i] = list(map(int, your_list[i])) #текст из csv сделали цифрами
+        your_list_iter[i] = list(map(int, your_list[i]))
+        R[i] = list(map(int, your_list[i]))
 
 sigma = []; for_del_ind = []
 
@@ -98,8 +102,13 @@ def find_max_min():
         return (ind_, ind, notnull)
 
 
-#def iteration():
-   # print('hello!')
+def iteration():
+    for k in range(len(groups_result)):
+        for i in groups_result[0]:
+            if k != 0:
+                for j in groups_result[k]:
+                    print('i = {0} j = {1} k = {2}'.format(i,j,k))
+        print('\n')
 
 
 def find_min_string():
@@ -125,7 +134,6 @@ def find_min_string():
     el_not_is_null_sum_ = [e for i, e in enumerate(values_sum) if i in el_not_is_null_]
     return (values_sum, notnull_, value_min_sum, notnull_sum_, el_not_is_null_, el_not_is_null_sum_)
 
-#your_list = np.array(your_list)
 groups = [4,5,7,7,7]
 #f = groups[0]
 
@@ -174,7 +182,7 @@ for j in groups:
             your_list[o][h] = 0
             your_list[h][o] = 0
 
-print("\n Yraaaaa, it is result posled etap!!! {} \n".format(groups_result))
+print("\n Uraaaaa, it is result posled etap!!! {} \n".format(groups_result))
 
-#iteration()
+iteration()
 
