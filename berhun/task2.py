@@ -35,7 +35,6 @@ def find_max_min():
                 print(notnull,'notnuliiiiidze\n')
                 del notnull[q1]
                 del notnull_sum[q1]
-                indexs.remove(for_del)
                 print('miii zdes\n')
     print(for_del,'fooooordeeeel\n')
     print(notnull, 'noooootnuuul\n')
@@ -46,7 +45,7 @@ def find_max_min():
 
     for j in range(len(notnull)):
         index = notnull[j]
-        for_sum = [e for i, e in enumerate(your_list[index]) if i in indexs]
+        for_sum = [e for i, e in enumerate(your_list[index]) if i in notnull]
         '''записываем сумму элементов'''
         x = sum(for_sum)
         '''добавляем в общий список'''
@@ -56,8 +55,8 @@ def find_max_min():
     '''считаем разность сумм'''
     sigma = list(map(lambda a, b: a - b, notnull_sum, sum_val))
     print('Сигма',sigma)
-    sigma_index = [(i,e) for i,e in zip(indexs,sigma)]
-    print("eto volshebny index:", indexs)
+    sigma_index = [(i,e) for i,e in zip(notnull,sigma)]
+    print("eto volshebny index:", notnull)
     print("res vihit:",sigma_index)
     if sign == 1:
         ind,val = max(sigma_index, key=lambda x: x[1])
@@ -65,7 +64,7 @@ def find_max_min():
         ind,val = min(sigma_index, key=lambda x: x[1])
     print('Максимальное значение {0} для эл-та {1} \n'.format(val, ind))
     print('etooo snova notnuuul', notnull)
-    return (ind, notnull, notnull_sum)
+    return (ind, notnull,notnull_sum)
 
 
 def find_min_string():
@@ -96,7 +95,7 @@ def find_min_string():
     return (values_sum, notnull_f, value_min_sum, notnull_sum_f, el_not_is_null_f, el_not_is_null_sum_f)
 
 #your_list = np.array(your_list)
-groups = [4,5,7,7,7]
+groups = [4,5]
 #f = groups[0]
 
 print(np.array(your_list))
@@ -113,7 +112,8 @@ for j in groups:
     print('etoooo j:',j)
     '''поиск миним элемента в группе'''
     values_sum, notnull_f_, value_min_sum, notnull_sum_f_, el_not_is_null_f_, el_not_is_null_sum_f_ = find_min_string()
-    print(notnull,'notnuuuuul in for')
+    notnull = list(notnull_f_)
+    print(notnull_f_,'notnuuuuul in for')
     '''пока кол-во эл-ов в группе не станет равным заданному числу'''
     while(len(notnull)!= j):
         qwe = qwe +1
@@ -124,9 +124,13 @@ for j in groups:
         print(sign,'siiign\n')
         '''находим минимальное или максимальное число, в зависимости от sigma'''
         if sign == 1:
-            for_del, notnull, notnull_sum = find_max_min()
+            notnull = list(notnull)
+            notnull_sum = list(notnull_sum_f_)
+            for_del, notnull,notnull_sum = find_max_min()
         if sign == 0:
-            for_del, notnull, notnull_sum = find_max_min()
+            notnull = list(el_not_is_null_f_)
+            notnull_sum = list(el_not_is_null_sum_f_)
+            for_del, notnull,notnull_sum = find_max_min()
         print(notnull,'etooooo notnuuul_func')
         '''удалённые элементы добавляем в список'''
         for_del_ind.append(for_del)
