@@ -43,28 +43,52 @@ def find_max_min():
         #notnull[for_del]
       #  notnull_sum.remove(for_del_value)
     '''проходимся по строкам с этими индексами'''
-    for j in range(len(notnull)):
-        index = notnull[j]
-        for_sum = [e for i, e in enumerate(your_list[index]) if i in indexs]
-        '''записываем сумму элементов'''
-        x = sum(for_sum)
-        '''добавляем в общий список'''
-        sum_val.append(x)
-    print('kogo vihit:',notnull_sum)
-    print('hto vihit:',sum_val)
-    '''считаем разность сумм'''
-    sigma = list(map(lambda a, b: a - b, notnull_sum, sum_val))
-    print('Сигма',sigma)
-    sigma_index = [(i,e) for i,e in zip(indexs,sigma)]
-    print("eto volshebny index:", indexs)
-    print("res vihit:",sigma_index)
     if sign == 1:
+        for j in range(len(notnull)):
+            '''выбираем индекс строки, которая является смежной'''
+            index = notnull[j]
+            '''для неё затем выбираем значения на пересечении'''
+            for_sum = [e for i, e in enumerate(your_list[index]) if i in indexs]
+            '''записываем сумму элементов'''
+            x = sum(for_sum)
+            '''добавляем в общий список'''
+            sum_val.append(x)
+        print('kogo vihit:',notnull_sum)
+        print('hto vihit:',sum_val)
+        '''считаем разность сумм'''
+        sigma = list(map(lambda a, b: a - b, notnull_sum, sum_val))
+        print('Сигма',sigma)
+        sigma_index = [(i,e) for i,e in zip(indexs,sigma)]
+        print("eto volshebny index:", indexs)
+        print("res vihit:",sigma_index)
         ind,val = max(sigma_index, key=lambda x: x[1])
+        print('Максимальное значение {0} для эл-та {1} \n'.format(val, ind))
+        return (ind, notnull)
     else:
+        thirty = [i for i in range(0,30)]
+        '''находим список элементов не из нашей группы'''
+        el_not_in_group=list(set(thirty) - set(flat) - set(notnull))
+        print(el_not_in_group, 'etoooooooooooooooo !!!!!!!!!!!!!!!!!!!!!!')
+        for j in range(len(el_not_in_group)):
+            index = el_not_in_group[j]
+            for_sum = [e for i, e in enumerate(your_list[index]) if i in indexs]
+            el_not_in_group_sum = [e for i, e in enumerate(values_sum) if i in indexs] #записываем все суммы строк
+            # с этими индексами
+            '''записываем сумму элементов'''
+            x = sum(for_sum)
+            '''добавляем в общий список'''
+            sum_val.append(x)
+        print('kogo vihit:',notnull_sum)
+        print('hto vihit:',sum_val)
+        '''считаем разность сумм'''
+        sigma = list(map(lambda a, b: a - b, notnull_sum, sum_val))
+        print('Сигма',sigma)
+        sigma_index = [(i,e) for i,e in zip(indexs,sigma)]
+        print("eto volshebny index:", indexs)
+        print("res vihit:",sigma_index)
         ind,val = min(sigma_index, key=lambda x: x[1])
-    print('Максимальное значение {0} для эл-та {1} \n'.format(val, ind))
-    print('etooo snova notnuuul', notnull)
-    return (ind, notnull)
+        print('etooo snova notnuuul', notnull)
+        return (ind, notnull)
 
 
 def find_min_string():
@@ -74,14 +98,13 @@ def find_min_string():
     value_min_sum = np.min(values_sumn[np.nonzero(values_sumn)])
     index_min = values_sum.index(value_min_sum)  #найти среди них минимальную
     print('Строка с минимальной суммой:',index_min)
-    notnull = [i for i, e in enumerate(your_list[index_min]) if e != 0] #записываем все ненулевые эл-ты
+
+    notnull = [i for i, e in enumerate(your_list[index_min]) if e != 0] #записываем все ненулевые смежные эл-ты
     notnull.append(index_min)
     notnull.sort()
     print('Индексы смежных элементов:', [i for i in notnull if i != index_min])
     indexs = [x for x in notnull]  #записываем индексы изначальной строки
     print(notnull,'notnnnnnnnnnul')
-   # notnull.pop()  #после удаляем индекс изнач строки
-    print(notnull,'notnnnnnnnnnul2')
     notnull_sum = [e for i, e in enumerate(values_sum) if i in indexs] #записываем все суммы строк с этими индексами
    # notnull_sum.remove(value_min_sum)
     # из неё в список
@@ -97,6 +120,8 @@ for_del = 0
 qwe = 0
 k = 0
 notnull_func = []
+notnull_func_all_delete_el = []
+flat = []
 
 '''проход по всем группам'''
 for j in groups:
@@ -127,6 +152,12 @@ for j in groups:
         print('\n')
     k = k + 1
     print('{0} groop------------------------------------: {1}'.format(k, [i for i in notnull]))
+    #otnull_func = ','.join(notnull_func)
+  #  if k == 1:
+    flat.clear()
+    notnull_func_all_delete_el.append(notnull_func)
+    flat = [item for sublist in notnull_func_all_delete_el for item in sublist] #объединение списка списков
+    # в один список
     for h in range(len(your_list[0])):
         for o in notnull_func:
             your_list[o][h] = 0
