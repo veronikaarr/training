@@ -68,7 +68,7 @@ def find_max_min():
         thirty = [i for i in range(0,30)]
         '''находим список элементов не из нашей группы'''
         el_not_in_group=list(set(thirty) - set(flat) - set(notnull))
-        print(el_not_in_group, 'etoooooooooooooooo !!!!!!!!!!!!!!!!!!!!!!')
+        print(el_not_in_group, 'etoooooooooooooooo1 !!!!!!!!!!!!!!!!!!!!!!')
         for j in range(len(el_not_in_group)):
             index = el_not_in_group[j]
             for_sum = [e for i, e in enumerate(your_list[index]) if i in indexs]
@@ -102,13 +102,22 @@ def find_min_string():
     notnull = [i for i, e in enumerate(your_list[index_min]) if e != 0] #записываем все ненулевые смежные эл-ты
     notnull.append(index_min)
     notnull.sort()
+    print(notnull, 'srAAAAAAAAvn1')
     print('Индексы смежных элементов:', [i for i in notnull if i != index_min])
     indexs = [x for x in notnull]  #записываем индексы изначальной строки
     print(notnull,'notnnnnnnnnnul')
     notnull_sum = [e for i, e in enumerate(values_sum) if i in indexs] #записываем все суммы строк с этими индексами
    # notnull_sum.remove(value_min_sum)
     # из неё в список
-    return (values_sum, notnull, value_min_sum, indexs, notnull_sum)
+
+    '''а теперь делаем то же самое для несмежных эл-ов'''
+    stroki_not_null = [i for i, e in enumerate(values_sumn) if e != 0] #записываем все ненулевые строки
+    '''индексы всех элементов не из группы'''
+    el_not_is_null = list(set(stroki_not_null) - set(notnull))
+    print(el_not_is_null, 'etoooooooooooooooo2 !!!!!!!!!!!!!!!!!!!!!!')
+    '''суммы для всех несмежных строк'''
+    el_not_is_null_sum = [e for i, e in enumerate(values_sum) if i in el_not_is_null]
+    return (values_sum, notnull, value_min_sum, indexs, notnull_sum, el_not_is_null, el_not_is_null_sum)
 
 #your_list = np.array(your_list)
 groups = [4,5,7,7,7]
@@ -127,7 +136,7 @@ flat = []
 for j in groups:
     print('etoooo j:',j)
     '''поиск миним элемента в группе'''
-    values_sum, notnull, value_min_sum, indexs, notnull_sum = find_min_string()
+    values_sum, notnull, value_min_sum, indexs, notnull_sum, el_not_is_null, el_not_is_null_sum = find_min_string()
     print(notnull,'notnuuuuul in for')
     '''пока кол-во эл-ов в группе не станет равным заданному числу'''
     while(len(notnull_func)!= j):
