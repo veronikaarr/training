@@ -11,11 +11,9 @@ with open('82-1.csv', "r", encoding='utf-8') as f:
     reader = csv.reader(f)
     your_list = list(reader)
     your_list_iter = list(your_list)
-    R = list(your_list)
     for i in range(len(your_list)):
         your_list[i] = list(map(int, your_list[i])) #текст из csv сделали цифрами
         your_list_iter[i] = list(map(int, your_list[i]))
-        R[i] = list(map(int, your_list[i]))
 
 sigma = []; for_del_ind = []
 
@@ -101,14 +99,48 @@ def find_max_min():
         print(ind, 'eTTTTTTTTTTTTTTTTTTTTTTTT')
         return (ind_, ind, notnull)
 
+'''создание двумерного массива'''
+R = [[0] * 26 for i in range(7)]
+R_ = [[0] * 5 for i in range(5)]
+a = 0
+R_group = []
+
+def summator(value_fix, gr):
+    summ = 0
+    for i in groups_result[gr]:
+        summ = summ + your_list_iter[value_fix][i]
+    return (summ)
 
 def iteration():
-    for k in range(len(groups_result)):
-        for i in groups_result[0]:
-            if k != 0:
-                for j in groups_result[k]:
-                    print('i = {0} j = {1} k = {2}'.format(i,j,k))
-        print('\n')
+    a = 0; b = 0; flag = 0
+    for line_gr in range(len(groups_result)):
+        b = 0
+        for line_val in groups_result[line_gr]:
+            a = 0
+            for col_gr in range(len(groups_result)):
+                for col_val in groups_result[col_gr]:
+                    if line_gr != col_gr:
+                        R[b][a] = (summator(line_val,col_gr) - summator(line_val,line_gr)) + \
+                        (summator(col_val,line_gr) - summator(col_val,col_gr)) - 2 * your_list_iter[line_val][col_val]
+                        print('num gr p {0}, num gr q {1}'.format(line_gr,col_gr))
+                        print('k = {0} j = {1}'.format(line_val,col_val))
+                        print('a = ',a)
+                        print('b = ',b)
+                        a = a + 1
+                print('\n')
+            b = b + 1
+        print("Hello, R")
+        print(np.array(R))
+    print('line_gr = {0}, line_val = {1}, col_gr = {2}, col_val = {3}'.format(line_gr,line_val,col_gr,col_val))
+    #print('etoo a1 = {0}, etoo b1 = {1}'.format(a, b))
+    print(np.array(R))
+    print('\n')
+
+    d_i = 0
+    '''for d1 in range(len(R)):
+        for d2 in R[d1]:
+            print('d1 = {}, d2 = {}'.format(d1,d2))
+    print('Hello, R1 = {}'.format(R_)) '''
 
 
 def find_min_string():
