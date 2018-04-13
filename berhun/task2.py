@@ -3,6 +3,7 @@
 
 import csv
 import numpy as np
+import copy
 
 '''your_list - общая матрица
 '''
@@ -105,6 +106,7 @@ R_ = [[0] * 5 for i in range(5)]
 a = 0
 R_group = []
 
+
 def summator(value_fix, gr):
     summ = 0
     for i in groups_result[gr]:
@@ -112,28 +114,111 @@ def summator(value_fix, gr):
     return (summ)
 
 def iteration():
-    a = 0; b = 0; flag = 0
+    a = 0; b = 0
     for line_gr in range(len(groups_result)):
-        b = 0
-        for line_val in groups_result[line_gr]:
-            a = 0
-            for col_gr in range(len(groups_result)):
-                for col_val in groups_result[col_gr]:
-                    if line_gr != col_gr:
-                        R[b][a] = (summator(line_val,col_gr) - summator(line_val,line_gr)) + \
-                        (summator(col_val,line_gr) - summator(col_val,col_gr)) - 2 * your_list_iter[line_val][col_val]
-                        print('num gr p {0}, num gr q {1}'.format(line_gr,col_gr))
-                        print('k = {0} j = {1}'.format(line_val,col_val))
-                        print('a = ',a)
-                        print('b = ',b)
-                        a = a + 1
-                print('\n')
-            b = b + 1
-        print("Hello, R")
-        print(np.array(R))
+        flag = 0
+        #max_el_list.clear()
+        #ind_el_list.clear()
+        groups_result_copy = copy.deepcopy(groups_result)
+        while(flag != 1):
+            b = 0
+            for line_val in groups_result[line_gr]:
+                a = 0
+                '''считаем суммы по формуле'''
+                for col_gr in range(len(groups_result)):
+                    for col_val in groups_result[col_gr]:
+                        if line_gr != col_gr:
+                           # print('a = {0}, b = {1}'.format(a,b))
+                            R[b][a] = (summator(line_val,col_gr) - summator(line_val,line_gr)) + \
+                            (summator(col_val,line_gr) - summator(col_val,col_gr)) - 2 * your_list_iter[line_val][col_val]
+                           # print('num gr p {0}, num gr q {1}'.format(line_gr,col_gr))
+                            #print('k = {0} j = {1}'.format(line_val,col_val))
+                            #print('a = ',a)
+                           # print('b = ',b)
+                            a = a + 1
+                b = b + 1
+            print('\n')
+            print("Hello, R")
+            '''поиск максимального эл-та'''
+            max_el_list = []
+            ind_el_list = []
+            for m in range(len(R)):
+                max_el = max(R[m])
+                max_el_list.append(max_el)
+                ind_el = R[m].index(max_el)
+                ind_el_list.append(ind_el)
+            print('max_el_list = ', max_el_list)
+            max_el_res = max(max_el_list)
+            '''если он найден и ненулевой'''
+            if max_el_res > 0:
+                line_max = max_el_list.index(max_el_res)
+                column_max = ind_el_list[line_max]
+                print('naidenny el maximus = ',R[line_max][column_max])
+                print(np.array(R))
+                print('line_max = ',line_max)
+                print('column_max = ', column_max)
+
+                '''произвести замену в списке списков'''
+                gr_sum_al = 0
+                gr_max_el = 0
+                gr = 0
+                #copy.deepcopy(a)
+               # groups_result_copy = groups_result[:]
+                print('Это тот groups_result_copy, что не удаляется = ',groups_result_copy)
+                print('А это groups_result = ', groups_result)
+                for gr in range(len(groups_result_copy)):
+                    if gr == line_gr:
+                        continue
+                    '''длина группы'''
+                    gr_sum = len(groups_result_copy[gr])
+                    print('gr_sum = ',gr_sum)
+                    '''длина всех эл-ов группы'''
+                    gr_sum_al = gr_sum_al + gr_sum
+                    if gr_sum_al > column_max:
+                        print('gr_sum_al = ', gr_sum_al)
+                        gr_max_el_back = gr_sum_al - column_max
+                        print('column_max = ',column_max)
+                        print('gr_max_el_back = ',gr_max_el_back)
+                        gr_max_el = gr_sum - gr_max_el_back
+                        break
+                print('ono',gr, gr_max_el_back)
+                print('Группа для рассмотрения: ', line_gr)
+                #print(groups_result_copy[gr][gr_max_el])
+                #print('line_gr = {0}, line_max = {1}'.format(line_gr, line_max))
+                #replace1 = groups_result_copy[line_gr][line_max]
+                print('before groups_result_copy = ', groups_result_copy)
+
+                replace1 = groups_result_copy[gr][gr_max_el_back]
+                replace2 = groups_result_copy[line_gr][line_max]
+                print('replace1 = {0}, replace2 = {1}'.format(replace1, replace2))
+                '''без двух последующих строк replace1 = 11, replace2 = 1
+                потом почему-то они становятся 25 и 24
+                однозначно здесь происходит что-то нечистое'''
+                '''gr - группа из столбца
+                line_gr - группа из строки'''
+                groups_result_copy[gr][gr_max_el_back] = replace2
+                groups_result_copy[line_gr][line_max] = replace1
+                print('again: replace1 = {0}, replace2 = {1}'.format(replace1, replace2))
+
+                print('after groups_result_copy = ',groups_result_copy)
+                #groups_result_copy.clear()
+                print('a = {0}, b = {1}'.format(a, b))
+            else:
+                flag = 1
+            print(np.array(R))
+
+            #print(groups_result_copy)
+            '''очищаем список R'''
+            for i in range(len(R)):
+                for j in range(len(R[i])):
+                    R[i][j] = 0
+            '''очищаем список group_res_copy'''
+        for i in range(len(groups_result_copy)):
+            for j in range(len(groups_result_copy[i])):
+                groups_result_copy[i][j] = 0
     print('line_gr = {0}, line_val = {1}, col_gr = {2}, col_val = {3}'.format(line_gr,line_val,col_gr,col_val))
     #print('etoo a1 = {0}, etoo b1 = {1}'.format(a, b))
-    print(np.array(R))
+   # print(np.array(R))
     print('\n')
 
     d_i = 0
@@ -215,6 +300,7 @@ for j in groups:
             your_list[h][o] = 0
 
 print("\n Uraaaaa, it is result posled etap!!! {} \n".format(groups_result))
+
 
 iteration()
 
