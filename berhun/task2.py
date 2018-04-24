@@ -119,14 +119,14 @@ def iteration():
         flag = 0
         #max_el_list.clear()
         #ind_el_list.clear()
-        groups_result_copy = copy.deepcopy(groups_result)
+        groups_result_copy = copy.deepcopy(groups_result_copy)
         while(flag != 1):
             b = 0
-            for line_val in groups_result[line_gr]:
+            for line_val in groups_result_copy[line_gr]:
                 a = 0
                 '''считаем суммы по формуле'''
-                for col_gr in range(len(groups_result)):
-                    for col_val in groups_result[col_gr]:
+                for col_gr in range(len(groups_result_copy)):
+                    for col_val in groups_result_copy[col_gr]:
                         if line_gr != col_gr:
                            # print('a = {0}, b = {1}'.format(a,b))
                             R[b][a] = (summator(line_val,col_gr) - summator(line_val,line_gr)) + \
@@ -165,7 +165,7 @@ def iteration():
                 #copy.deepcopy(a)
                # groups_result_copy = groups_result[:]
                 print('Это тот groups_result_copy, что не удаляется = ',groups_result_copy)
-                print('А это groups_result = ', groups_result)
+               # print('А это groups_result = ', groups_result)
                 for gr in range(len(groups_result_copy)):
                     if gr == line_gr:
                         continue
@@ -181,12 +181,12 @@ def iteration():
                         print('gr_max_el_back = ',gr_max_el_back)
                         gr_max_el = gr_sum - gr_max_el_back
                         break
-                print('ono',gr, gr_max_el_back)
+                 #print('ono',gr, gr_max_el_back)
                 print('Группа для рассмотрения: ', line_gr)
                 #print(groups_result_copy[gr][gr_max_el])
                 #print('line_gr = {0}, line_max = {1}'.format(line_gr, line_max))
                 #replace1 = groups_result_copy[line_gr][line_max]
-                print('before groups_result_copy = ', groups_result_copy)
+                #print('before groups_result_copy = ', groups_result_copy)
 
                 replace1 = groups_result_copy[gr][gr_max_el_back]
                 replace2 = groups_result_copy[line_gr][line_max]
@@ -300,7 +300,6 @@ for j in groups:
             your_list[h][o] = 0
 
 print("\n Uraaaaa, it is result posled etap!!! {} \n".format(groups_result))
-
 
 iteration()
 
