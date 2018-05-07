@@ -4,6 +4,7 @@
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+from functools import reduce
 
 Tc = 27
 Ts = 221
@@ -140,16 +141,79 @@ plt.savefig('3_Время_ожид.png')
 '''Пятый пункт'''
 
 eps = pow(10, -8)
-Po_5 = 0
-Po_5_next = 1000
-m = 0
+Po_5 = 100
+Po_5_next = 0
+denomin_list = []
+b_list = []
+m = 2
 n = 16
-while(Po_5 - Po_5_next > eps):
+
+def Po():
     Po_promej1_5 = [math.pow(a, x) / math.factorial(x) for x in range(1, n)]
-    Po_promej2_5 = [math.pow(lamda, x) / (n*nu + x * (1/Tw)) for x in range(1, )]
+    term1 = sum(Po_promej1_5)
+    m = 2
+    print(m, 'm before')
     for i in range(1, m):
         for q in range(1, i):
-            znamen = n*nu + x * (1/Tw)
-        math.pow(lamda, x) / znamen
+            denomin = n*nu + i * (1/Tw)
+            denomin_list.append(denomin)
+        op = reduce(lambda res, x: res * x, denomin_list, 1)
+        print(op, 'op')
+        b = math.pow(lamda, i) / op
+        b_list.append(b)
+    term2 = math.pow(a, n) * sum(b_list) /math.factorial(n)
+    Po_5_next = 1 / (term1 + term2)
+    m = m + 1
+    print(m, 'm after')
+    print(Po_5_next, 'Po_5_next')
+    return (m, Po_5_next)
 
-Po_5 = 1 / ()
+
+m, Po_5_next = Po()
+while(Po_5 - Po_5_next > eps):
+    Po_promej1_5 = [math.pow(a, x) / math.factorial(x) for x in range(1, n)]
+    term1 = sum(Po_promej1_5)
+    print(m, 'm before')
+    b = 0
+    for i in range(1, m):
+        for q in range(1, i):
+            denomin = n*nu + i * (1/Tw)
+            denomin_list.append(denomin)
+        op = reduce(lambda res, x: res * x, denomin_list, 1)
+        print(op, 'op')
+        b = math.pow(lamda, i) / op
+        b_list.append(b)
+    term2 = math.pow(a, n) * sum(b_list) /math.factorial(n)
+    Po_5 = Po_5_next
+    Po_5_next = 1 / (term1 + term2)
+    m = m + 1
+    print(m, 'm after')
+    print(Po_5_next, 'Po_5_next')
+    print(Po_5, 'Po_5')
+
+print(Po_5)
+
+Loh_5_sum = 0
+Loh_5_list = []
+
+n = 16
+
+for i in range(1, n+1):
+    for z in range(1, i):
+        Pn_5 = math.pow(a, i+z) / (math.pow(z, i) * math.factorial(z))
+        Loh_5 = Pn_5*z
+        Loh_5_sum = Loh_5 + Loh_5_sum
+    Loh_5_list.append(Loh_5_sum)
+
+print(Loh_5_list)
+
+'''Построение графиков'''
+
+grafik()
+
+z = [x for x in range(1,17)]
+
+plt.plot(z, Loh_5_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+for i,j in zip(z,Loh_5_list):
+    plt.text(i, j, str(j))
+plt.savefig('5_Длина_оч.png')
