@@ -145,64 +145,68 @@ Po_5 = 100
 Po_5_next = 0
 denomin_list = []
 b_list = []
+Po_5_list = []
 m = 2
 n = 16
 
-def Po():
-    Po_promej1_5 = [math.pow(a, x) / math.factorial(x) for x in range(1, n)]
+def Po(n_):
+    Po_promej1_5 = [math.pow(a, x) / math.factorial(x) for x in range(1, n_)]
     term1 = sum(Po_promej1_5)
     m = 2
     print(m, 'm before')
     for i in range(1, m):
         for q in range(1, i):
-            denomin = n*nu + i * (1/Tw)
+            denomin = n_*nu + i * (1/Tw)
             denomin_list.append(denomin)
         op = reduce(lambda res, x: res * x, denomin_list, 1)
         print(op, 'op')
         b = math.pow(lamda, i) / op
         b_list.append(b)
-    term2 = math.pow(a, n) * sum(b_list) /math.factorial(n)
+    term2 = math.pow(a, n_) * sum(b_list) /math.factorial(n)
     Po_5_next = 1 / (term1 + term2)
     m = m + 1
     print(m, 'm after')
     print(Po_5_next, 'Po_5_next')
     return (m, Po_5_next)
 
+for i_ in range(1, n+1):
+    m, Po_5_next = Po(i_)
+    while(Po_5 - Po_5_next > eps):
+        Po_promej1_5 = [math.pow(a, x) / math.factorial(x) for x in range(1, i_)]
+        term1 = sum(Po_promej1_5)
+        print(m, 'm before')
+        b = 0
+        for i in range(1, m):
+            for q in range(1, i):
+                denomin = n*nu + i * (1/Tw)
+                denomin_list.append(denomin)
+            op = reduce(lambda res, x: res * x, denomin_list, 1)
+            print(op, 'op')
+            b = math.pow(lamda, i) / op
+            b_list.append(b)
+        term2 = math.pow(a, i_) * sum(b_list) /math.factorial(i_)
+        Po_5 = Po_5_next
+        Po_5_list.append(Po_5)
+        Po_5_next = 1 / (term1 + term2)
+        m = m + 1
+        print(m, 'm after')
+        print(Po_5_next, 'Po_5_next')
+       # print(Po_5, 'Po_5')
 
-m, Po_5_next = Po()
-while(Po_5 - Po_5_next > eps):
-    Po_promej1_5 = [math.pow(a, x) / math.factorial(x) for x in range(1, n)]
-    term1 = sum(Po_promej1_5)
-    print(m, 'm before')
-    b = 0
-    for i in range(1, m):
-        for q in range(1, i):
-            denomin = n*nu + i * (1/Tw)
-            denomin_list.append(denomin)
-        op = reduce(lambda res, x: res * x, denomin_list, 1)
-        print(op, 'op')
-        b = math.pow(lamda, i) / op
-        b_list.append(b)
-    term2 = math.pow(a, n) * sum(b_list) /math.factorial(n)
-    Po_5 = Po_5_next
-    Po_5_next = 1 / (term1 + term2)
-    m = m + 1
-    print(m, 'm after')
-    print(Po_5_next, 'Po_5_next')
-    print(Po_5, 'Po_5')
+   # print('\netooooo POOOOOOO', Po_5)
 
-print(Po_5)
+print(Po_5_list, 'Po5___')
 
 Loh_5_sum = 0
 Loh_5_list = []
 
 n = 16
 
-for i in range(1, n+1):
-    for z in range(1, i):
-        Pn_5 = math.pow(a, i+z) / (math.pow(z, i) * math.factorial(z))
-        Loh_5 = Pn_5*z
-        Loh_5_sum = Loh_5 + Loh_5_sum
+for k_ in range(1, n+1):
+    for z in range(1, k_):
+            Pn_5 = math.pow(a, k_+z) / (math.pow(z, k_) * math.factorial(z))
+            Loh_5 = Pn_5*z
+            Loh_5_sum = Loh_5 + Loh_5_sum
     Loh_5_list.append(Loh_5_sum)
 
 print(Loh_5_list)
