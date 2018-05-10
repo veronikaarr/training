@@ -35,7 +35,7 @@ def grafik():
 lamda = 1/Tc
 nu = 1/Ts
 a = lamda/nu
-n = 15
+n = 13
 Potk = list()
 Pobsl = list()
 nsr = list()
@@ -69,6 +69,113 @@ plt.savefig('1_Вер_отк+коэф_загр.png')
 
 
 '''Второй пункт здесь всё не нормас, посмотреть код Кати'''
+
+def task_1_2(tc1, ts1, countOperator):
+    channel = 0
+    a = ts1 / tc1
+    A = 1 / tc1
+    p = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+    channel = channel+1
+    queue = countOperator - channel
+    znam = 1.0
+
+    i = 1
+    while(i <= channel):
+        p[i] = math.pow(a, i) / math.factorial(i)
+        znam += p[i]
+        i = i + 1
+
+        i = (channel + 1)
+    while(i <= (channel + queue)):
+        p[i] = math.pow((a / channel), (i - channel)) * (math.pow(a, channel) / math.factorial(channel))
+        znam += p[i]
+        i=i+1
+
+    # вычисление P0
+    p[0] = 1.0 / znam
+
+    i = 1
+    while(i <= (channel + queue)):
+        p[i] = p[i]*p[0]
+        print('i = ', i)
+        i=i+1
+
+    busyOperator = 0.0
+    busyOperator = (a * (1 - p[countOperator])) / channel
+
+    queueLengh = 0.0
+    i = (channel + 1)
+    while(i <= (channel + queue)):
+        queueLengh=queueLengh+math.pow((a / channel), (i - channel)) * (math.pow(a, channel) / math.factorial(channel)) \
+                   * p[0] * (i - channel)
+        i=i+1
+
+    busyQueue = 0.0
+    if (queue == 0):
+        busyQueue = 0
+    else:
+        busyQueue = queueLengh / queue
+
+    queueWait = queueLengh / A
+    channel = channel + 1
+    return (channel, countOperator)
+
+channel = 0
+countOperator = 13
+
+channel, countOperator = task_1_2(Tc, Ts, countOperator)
+
+while (channel < countOperator):
+    a = Ts / Tc
+    A = 1 / Tc
+    p = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+    channel = channel+1
+    queue = countOperator - channel
+    znam = 1.0
+
+    i = 1
+    while(i <= channel):
+        p[i] = math.pow(a, i) / math.factorial(i)
+        znam += p[i]
+        i = i + 1
+
+        i = (channel + 1)
+    while(i <= (channel + queue)):
+        p[i] = math.pow((a / channel), (i - channel)) * (math.pow(a, channel) / math.factorial(channel))
+        znam += p[i]
+        i=i+1
+
+    # вычисление P0
+    p[0] = 1.0 / znam
+
+    i = 1
+    while(i <= (channel + queue)):
+        p[i] = p[i]*p[0]
+        print('i = ', i)
+        i=i+1
+
+    busyOperator = 0.0
+    busyOperator = (a * (1 - p[countOperator])) / channel
+
+    queueLengh = 0.0
+    i = (channel + 1)
+    while(i <= (channel + queue)):
+        queueLengh=queueLengh+math.pow((a / channel), (i - channel)) * (math.pow(a, channel) / math.factorial(channel)) \
+                   * p[0] * (i - channel)
+        i=i+1
+
+    busyQueue = 0.0
+    if (queue == 0):
+        busyQueue = 0
+    else:
+        busyQueue = queueLengh / queue
+
+    queueWait = queueLengh / A
+    channel = channel + 1
+    print('channel = {0}, countOperator = {1}'.format(channel,countOperator))
+
 
 Po_promej = [(math.pow(a, x) / math.factorial(x)) for x in range(0, n)]
 Po_2_list = []
