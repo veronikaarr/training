@@ -68,13 +68,11 @@ plt.savefig('1_Вер_отк+коэф_загр.png')
 #plt.show()
 
 
-'''Второй пункт здесь всё не нормас, посмотреть код Кати'''
+'''Второй пункт ок'''
 
-def task_1_2(tc1, ts1, countOperator):
-    channel = 0
+def task_1_2(tc1, ts1, countOperator,channel):
     a = ts1 / tc1
     A = 1 / tc1
-    p = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
     channel = channel+1
     queue = countOperator - channel
@@ -82,13 +80,17 @@ def task_1_2(tc1, ts1, countOperator):
 
     i = 1
     while(i <= channel):
-        p[i] = math.pow(a, i) / math.factorial(i)
+        promp = math.pow(a, i) / math.factorial(i)
+        promp = float('{:.3f}'.format(promp))
+        p[i] = promp
         znam += p[i]
         i = i + 1
 
-        i = (channel + 1)
+    i = (channel + 1)
     while(i <= (channel + queue)):
-        p[i] = math.pow((a / channel), (i - channel)) * (math.pow(a, channel) / math.factorial(channel))
+        promp1 = math.pow((a / channel), (i - channel)) * (math.pow(a, channel) / math.factorial(channel))
+        promp1 = float('{:.3f}'.format(promp1))
+        p[i] = promp1
         znam += p[i]
         i=i+1
 
@@ -97,12 +99,17 @@ def task_1_2(tc1, ts1, countOperator):
 
     i = 1
     while(i <= (channel + queue)):
-        p[i] = p[i]*p[0]
-        print('i = ', i)
+        promp2 = p[i]*p[0]
+        promp2 = float('{:.3f}'.format(promp2))
+        p[i] = promp2
         i=i+1
+
+    p2_list.append(p[countOperator])
 
     busyOperator = 0.0
     busyOperator = (a * (1 - p[countOperator])) / channel
+    busyOperator = float('{:.3f}'.format(busyOperator))
+    busyOperator_list.append(busyOperator)
 
     queueLengh = 0.0
     i = (channel + 1)
@@ -118,63 +125,74 @@ def task_1_2(tc1, ts1, countOperator):
         busyQueue = queueLengh / queue
 
     queueWait = queueLengh / A
-    channel = channel + 1
+    queueLengh = float('{:.3f}'.format(queueLengh))
+    queueWait = float('{:.3f}'.format(queueWait))
+    queueLengh_list.append(queueLengh)
+    queueWait_list.append(queueWait)
     return (channel, countOperator)
 
 channel = 0
 countOperator = 13
 
-channel, countOperator = task_1_2(Tc, Ts, countOperator)
+p = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+busyOperator_list = []
+queueLengh_list = []
+queueWait_list = []
+p2_list = []
+
+channel, countOperator = task_1_2(Tc, Ts, countOperator, channel)
 
 while (channel < countOperator):
-    a = Ts / Tc
-    A = 1 / Tc
-    p = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    channel, countOperator = task_1_2(Tc, Ts, countOperator,channel)
+    #print('channel = {0}, countOperator = {1}'.format(channel,countOperator))
 
-    channel = channel+1
-    queue = countOperator - channel
-    znam = 1.0
+print('p2_list = ', p2_list)
+print('len_p = ', len(p2_list))
+print('len_b = ', len(busyOperator_list))
+print('len_q_L = ', len(queueLengh_list))
+print('len_q_W = ', len(queueWait_list))
 
-    i = 1
-    while(i <= channel):
-        p[i] = math.pow(a, i) / math.factorial(i)
-        znam += p[i]
-        i = i + 1
+'''Построение графиков'''
 
-        i = (channel + 1)
-    while(i <= (channel + queue)):
-        p[i] = math.pow((a / channel), (i - channel)) * (math.pow(a, channel) / math.factorial(channel))
-        znam += p[i]
-        i=i+1
+'вероятность отказа в зависимости от длины очереди'
 
-    # вычисление P0
-    p[0] = 1.0 / znam
+grafik()
 
-    i = 1
-    while(i <= (channel + queue)):
-        p[i] = p[i]*p[0]
-        print('i = ', i)
-        i=i+1
+z = [x for x in range(1,14)]
 
-    busyOperator = 0.0
-    busyOperator = (a * (1 - p[countOperator])) / channel
+plt.plot(z, p2_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+for i,j in zip(z,p2_list):
+    plt.text(i, j, str(j))
+plt.savefig('2_1_вероятность отказа.png')
 
-    queueLengh = 0.0
-    i = (channel + 1)
-    while(i <= (channel + queue)):
-        queueLengh=queueLengh+math.pow((a / channel), (i - channel)) * (math.pow(a, channel) / math.factorial(channel)) \
-                   * p[0] * (i - channel)
-        i=i+1
+'''коэффициент загрузки операторов в зависимости от длины очереди'''
 
-    busyQueue = 0.0
-    if (queue == 0):
-        busyQueue = 0
-    else:
-        busyQueue = queueLengh / queue
+grafik()
 
-    queueWait = queueLengh / A
-    channel = channel + 1
-    print('channel = {0}, countOperator = {1}'.format(channel,countOperator))
+z = [x for x in range(1,14)]
+
+plt.plot(z, busyOperator_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+for i,j in zip(z,busyOperator_list):
+    plt.text(i, j, str(j))
+plt.savefig('2_2_коэффициент загрузки операторов.png')
+
+'''математического ожидания длины очереди в зависимости от длины очереди'''
+
+grafik()
+
+plt.plot(z, queueLengh_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+for i,j in zip(z,queueLengh_list):
+    plt.text(i, j, str(j))
+plt.savefig('2_3_математического ожидания длины очереди.png')
+
+'Математического ожидания времени пребывания клиентов в очереди в зависимости от длины очереди'
+
+grafik()
+
+plt.plot(z, queueWait_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+for i,j in zip(z,queueWait_list):
+    plt.text(i, j, str(j))
+plt.savefig('2_4_математического ожидания времени пребывания клиентов.png')
 
 
 Po_promej = [(math.pow(a, x) / math.factorial(x)) for x in range(0, n)]
@@ -195,8 +213,93 @@ for n in range(1,16):
     #print('То самое кривое выражение = ', wtf)
     print('Po_2 = {0}, Potk_2 = {1}, q = {2}, Loh = {3}, S = {4}, Tsr = {5}'.format(Po_2, Potk_2, q, Loh, S, Tsr))
 
+'''Третий пункт'''
 
-'''Четвёртый пункт Здесь вроде всё нормас'''
+def task_1_3(tc1, ts1, countOperator, channel, foundResult):
+    channel = channel+1
+    if (a / channel < 1):
+        queue = 1
+        while(queue < maxQueue):
+            for i in range(0, channel + queue + 1):
+                p.append(0)
+            znam = 1.0
+
+            i = 1
+            while (i <= channel):
+                p[i] = pow(a, i) / math.factorial(i)
+                znam += p[i]
+                i=i+1
+
+            i = (channel + 1)
+            while (i <= (channel + queue)):
+                p[i] = pow((a / channel), (i - channel)) * (pow(a, channel) / math.factorial(channel))
+                znam += p[i]
+                i=i+1
+
+            # вычисление P0
+            p[0] = 1.0 / znam
+
+            i = 1
+            while(i <= (channel + queue)):
+                p[i] *= p[0]
+                i=i+1
+
+            busyOperator = 0.0    # коэффициент загрузки операторов в зависимости от длины очереди
+            busyOperator = (a * (1 - p[channel + queue])) / channel
+
+            queueLengh = 0.0
+            i = (channel + 1)
+            while(i <= (channel + queue)):
+                queueLengh += pow((a / channel), (i - channel)) * (pow(a, channel) / math.factorial(channel)) * p[0] * (i - channel)
+                i=i+1
+
+            busyQueue = 0.0   # коэффициент занятости мест в очереди в зависимости от длины очереди
+            if (queue == 0):
+                busyQueue = 0
+            else:
+                busyQueue = queueLengh / queue
+
+            results[queue] = abs(busyOperator - busyQueue)
+            results_list.append(results[queue])
+
+            #fout << results[queue] << '\t' << channel << '\t' << queue << endl;
+
+            if (results[queue - 1] < results[queue] and results[queue - 1] < results[queue - 2]):
+                finalParams[0] = channel
+                finalParams[1] = queue
+                finalResult = results[queue - 1]
+                foundResult = True
+            queue=queue+1
+    return (channel,countOperator, foundResult,finalParams)
+
+channel = 0
+a = Ts / Tc
+p = []
+maxQueue = 100
+results = []
+finalParams = [0,0]
+results_list = []
+for i in range(0,maxQueue + 1):
+    results.append(0)
+foundResult = False
+channel, countOperator, foundResult, finalParams = task_1_3(Tc, Ts, countOperator, channel, foundResult)
+while (channel < countOperator and foundResult != True):
+    channel, countOperator, foundResult, finalParams = task_1_3(Tc, Ts, countOperator,channel, foundResult)
+
+print('\n\n\nResult 3 item: {0}, {1}\n\n\n'.format(finalParams[0], finalParams[1]))
+print('results_list = ',len(results_list))
+
+'''Построение графиков'''
+
+grafik()
+
+z = [x for x in range(1,160) if x%10==0]
+plt.plot(z, results_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+for i,j in zip(z,results_list):
+    plt.text(i, j, str(j))
+plt.savefig('3_Длина_оч.png')
+
+'''Четвёртый пункт Здесь вроде всё ок'''
 
 Po_promej_3 = [(math.pow(a, x) / math.factorial(x)) for x in range(0, n)]
 
@@ -228,21 +331,21 @@ grafik()
 plt.plot(z, Loh_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
 for i,j in zip(z,Loh_list):
     plt.text(i, j, str(j))
-plt.savefig('3_Длина_оч.png')
+plt.savefig('4_Длина_оч.png')
 
 grafik()
 
 plt.plot(z, q_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
 for i,j in zip(z,q_list):
     plt.text(i, j, str(j))
-plt.savefig('3_Коэф_загр.png')
+plt.savefig('4_Коэф_загр.png')
 
 grafik()
 
 plt.plot(z, Tsr_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
 for i,j in zip(z,Tsr_list):
     plt.text(i, j, str(j))
-plt.savefig('3_Время_ожид.png')
+plt.savefig('4_Время_ожид.png')
 
 
 '''Пятый пункт Здесь почему-то при изменении числа каналов m почти не меняется (только при n = 16) меняется
@@ -343,6 +446,125 @@ for i,j in zip(z,Loh_5_list):
     plt.text(i, j, str(j))
 plt.savefig('5_Длина_оч.png')
 
+a = Ts / Tc
+A = 1 / Tc
+M = 1 / Ts
+N = 1 / Tw
+eps = 1e-8
+p = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+queueLengh5_list = []
+queueWait5_list = []
+busyOperator5_list = []
+
+countOperator = 12
+
+def task_1_5(Tc, Ts, Tw, countOperator, channel):
+    channel=channel+1
+    znam = 1.0
+
+    print('channel = ', channel)
+    i = 1
+    while(i <= channel):
+        p[i] = math.pow(a, i) / math.factorial(i)
+        znam += p[i]
+        i=i+1
+
+    p[channel + 1] = p[channel] * (A / (channel * M + N))
+    znam += p[channel + 1]
+
+    i = 2
+    while(True):
+        smalZnam = 1.0
+        q = 1
+        while(q <= i):
+            smalZnam *= (channel * M + q * N)
+            #print('q = {0}, i = {1}'.format(q,i))
+            q=q+1
+
+        p[channel + i] = p[channel] * (pow(A, i) / smalZnam)
+        print('rr = ', abs(p[channel + i] - p[channel + (i - 1)]), eps)
+        if (abs(p[channel + i] - p[channel + (i - 1)]) < eps):
+            #print('tiis')
+            break
+
+        znam += p[channel + i]
+        queue = i
+        i=i+1
+
+        #вычисление P0
+        p[0] = 1.0 / znam
+
+        i = 1
+        while(i <= (channel + queue)):
+            p[i] *= p[0]
+            i=i+1
+
+        queueLengh = 0.0
+        i = channel + 1
+
+        while(i <= (channel + queue)):
+            queueLengh += (i - channel) * p[i]
+            i=i+1
+
+    print('queueLengh = ', queueLengh)
+    queueLengh = float('{:.10f}'.format(queueLengh))
+    queueLengh5_list.append(queueLengh)
+
+    queueWait = queueLengh / A
+    queueWait = float('{:.10f}'.format(queueWait))
+    queueWait5_list.append(queueWait)
+    busyOperator = 0.0
+    i = 1
+    while(i <= channel):
+        busyOperator += i * p[i]
+        i = i+1
+    busyOperator_list.append(busyOperator)
+
+    i = (channel + 1)
+    while(i <= (channel + queue)):
+        busyOperator += channel * p[i]
+        i=i+1
+
+    busyOperator = busyOperator / channel
+    busyOperator = float('{:.10f}'.format(busyOperator))
+    busyOperator5_list.append(busyOperator)
+    return (channel)
+
+channel = task_1_5(Tc, Ts, Tw, 12, 0)
+while (channel < countOperator):
+    print('channel_____________ = ', channel)
+    channel = task_1_5(Tc, Ts, Tw, 12, channel)
+
+'''Построение графиков'''
+
+ql5 = len(queueLengh5_list)
+qw5 = len(queueWait5_list)
+b5 = len(busyOperator5_list)
+print('ql5 = {0}, qw5 = {1}, b5 = {2}, p = {3}'.format(queueLengh5_list, queueWait5_list, busyOperator5_list, p))
+
+z = [x for x in range(1,13)]
+grafik()
+
+plt.plot(z, queueLengh5_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+for i,j in zip(z,queueLengh5_list):
+    plt.text(i, j, str(j))
+plt.savefig('5_Математического ожидания длины очереди.png')
+
+grafik()
+
+plt.plot(z, queueWait5_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+for i,j in zip(z,queueWait5_list):
+    plt.text(i, j, str(j))
+plt.savefig('5_Математического ожидания времени пребывания клиентов.png')
+
+grafik()
+
+plt.plot(z, busyOperator5_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+for i,j in zip(z,busyOperator5_list):
+    plt.text(i, j, str(j))
+plt.savefig('5_Коэффициент загрузки операторов.png')
+
 '2 задание'
 
 '''Задача №2. Проектирование производственного участка.
@@ -400,14 +622,17 @@ def solveSecondTask():
     i = 1
     while(i <= n):
         P0 = getP0ForCloseSystems(n, i, r)
+        P0 = float('{:.3f}'.format(P0))
         Po_list.append(P0)
 
         #среднее число простаивающих каналов
         Nprost = n - getAvarageWorkChannels(n, i, r, P0)
+        Nprost = float('{:.3f}'.format(Nprost))
         Nprost_list.append(Nprost)
 
         #среднее число занятых наладчиков
         k = getAvarageWorkers(n, i, r, P0)
+        k = float('{:.3f}'.format(k))
         k_list.append(k)
         i=i+1
 
