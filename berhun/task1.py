@@ -35,7 +35,7 @@ def grafik():
 lamda = 1/Tc
 nu = 1/Ts
 a = lamda/nu
-n = 13
+n = 17
 Potk = list()
 Pobsl = list()
 nsr = list()
@@ -132,7 +132,7 @@ def task_1_2(tc1, ts1, countOperator,channel):
     return (channel, countOperator)
 
 channel = 0
-countOperator = 13
+countOperator = 17
 
 p = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 busyOperator_list = []
@@ -158,7 +158,7 @@ print('len_q_W = ', len(queueWait_list))
 
 grafik()
 
-z = [x for x in range(1,14)]
+z = [x for x in range(1,18)]
 
 plt.plot(z, p2_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
 for i,j in zip(z,p2_list):
@@ -169,7 +169,7 @@ plt.savefig('2_1_вероятность отказа.png')
 
 grafik()
 
-z = [x for x in range(1,14)]
+z = [x for x in range(1,18)]
 
 plt.plot(z, busyOperator_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
 for i,j in zip(z,busyOperator_list):
@@ -293,7 +293,7 @@ print('results_list = ',len(results_list))
 
 grafik()
 
-z = [x for x in range(1,160) if x%10==0]
+z = [x for x in range(1,16)]
 plt.plot(z, results_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
 for i,j in zip(z,results_list):
     plt.text(i, j, str(j))
@@ -308,15 +308,18 @@ Loh_list = []
 Tsr_list = []
 q_list = []
 
-for n in range(9,17):
+for n in range(9,13):
     print('n = {}, m = {}'.format(n, m))
     Po_2 = 1 / (sum(Po_promej[0:(n)]) + (math.pow(a, n + 1) / math.factorial(n) * (n - a)))
 
     Loh = math.pow(a, (n + 1)) / (math.pow((n - a), 2) * math.factorial(n - 1)) * Po_2
+    Loh = float('{:.3f}'.format(Loh))
     Loh_list.append(Loh)
     q = a / n
+    q = float('{:.3f}'.format(q))
     q_list.append(q)
     Tsr = Loh / lamda
+    Tsr = float('{:.3f}'.format(Tsr))
     Tsr_list.append(Tsr)
     print('Po_2 = {0}, Loh = {1}, q = {2}, Tsr = {3}, S = {4} '.format(Po_2, Loh, q, Tsr, S))
 
@@ -362,7 +365,7 @@ Po_5_list = []
 m = 2
 n = 5
 
-def Po(n_ = 16, m_ = 2):
+def Po(n_ = 12, m_ = 2):
     Po_promej1_5 = [math.pow(a, x) / math.factorial(x) for x in range(1, n_)]
     term1 = sum(Po_promej1_5)
     for i in range(1, m_):
@@ -446,6 +449,8 @@ for i,j in zip(z,Loh_5_list):
     plt.text(i, j, str(j))
 plt.savefig('5_Длина_оч.png')
 
+'Снова 5 пункт другое решение'
+'''
 a = Ts / Tc
 A = 1 / Tc
 M = 1 / Ts
@@ -453,6 +458,8 @@ N = 1 / Tw
 eps = 1e-8
 p = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
      0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+channel = 0
+countOperator = 12
 queueLengh5_list = []
 queueWait5_list = []
 busyOperator5_list = []
@@ -519,7 +526,6 @@ def task_1_5(Tc, Ts, Tw, countOperator, channel):
     while(i <= channel):
         busyOperator += i * p[i]
         i = i+1
-    busyOperator_list.append(busyOperator)
 
     i = (channel + 1)
     while(i <= (channel + queue)):
@@ -531,13 +537,13 @@ def task_1_5(Tc, Ts, Tw, countOperator, channel):
     busyOperator5_list.append(busyOperator)
     return (channel)
 
-channel = task_1_5(Tc, Ts, Tw, 12, 0)
+channel = task_1_5(Tc, Ts, Tw, countOperator, channel)
 while (channel < countOperator):
     print('channel_____________ = ', channel)
-    channel = task_1_5(Tc, Ts, Tw, 12, channel)
+    channel = task_1_5(Tc, Ts, Tw, countOperator, channel)'''
 
 '''Построение графиков'''
-
+'''
 ql5 = len(queueLengh5_list)
 qw5 = len(queueWait5_list)
 b5 = len(busyOperator5_list)
@@ -563,7 +569,126 @@ grafik()
 plt.plot(z, busyOperator5_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
 for i,j in zip(z,busyOperator5_list):
     plt.text(i, j, str(j))
-plt.savefig('5_Коэффициент загрузки операторов.png')
+plt.savefig('5_Коэффициент загрузки операторов.png')'''
+
+def fifth(a, nu, lambd, channelmax, tw):
+    vi = 1/tw
+    summ = []
+    proizv = 1
+    n = channel = 12
+    m = queue = 1
+    avgq = []
+    qq = []
+    esp = 1e-15
+
+    def Proizv(n,i):
+        proizv = 1
+        for q in range(1, i + 1):
+            proizv *= ((n * nu) + (q * vi))
+        return proizv
+    def Sum2(n,m):
+        sum = 0
+        for i in range(1, m + 1):
+            sum += math.pow(lambd, i) / Proizv(n,i)
+        sum *= math.pow(a, n) / math.factorial(n)
+        return sum
+    def Sum1(n):
+        sum = 0
+        for i in range(0, n + 1):
+            sum += (math.pow(a, i) / math.factorial(i))
+        return sum
+    def P02(n,m):
+        return 1/ (Sum1(n) + Sum2(n,m))
+        # avgq = []
+        # qq = []
+        #for n in range(1, channelmax+1):
+        # print(P0)
+        # sum1 = 0
+        # sum2 = 0
+        # for i in range(0, n+1):
+        #     sum1 +=(math.pow(a,i)/math.factorial(i))*P0*i
+        # for i in range(1,m+1):
+        #     proizv = 1
+        #     for q in range(1, i + 1):
+        #         proizv *= (n * nu + q * vi)
+        #     sum2 += math.pow(lambd, i) / proizv
+        # sum2 *= n*math.pow(a,n)*P0/math.factorial(n)
+        # avgq.append(sum1 + sum2*math.pow(a,n)/math.factorial(n))
+        # qq.append(avgq[-1]/n)
+    def m(n):
+        m = 1
+        while (math.fabs(P02(n, m) - P02(n, m + 1))) > esp:
+            m += 1
+        return m
+    def P0(n):
+        return P02(n,m(n))
+    # def Potk(n):
+    #     return math.pow(a,n)*P0(n)/math.factorial(n)*math.pow(a,m(n))/Proizv(n,m(n))
+    # def Pobsl(n):
+    #     return (1-Potk(n))
+    def Sum2forL(n,m):
+        sum = 0
+        for i in range(1, m + 1):
+            sum += math.pow(lambd, i)*i / Proizv(n,i)
+        sum *= math.pow(a, n) / math.factorial(n)
+        return sum
+    def L(n):
+        return Sum2forL(n,m(n))*P0(n)
+    def Nsr(n):
+        sum = 0
+        for i in range(0,n+1):
+            sum+=i*math.pow(a,i)*P0(n)/math.factorial(i)
+        return n*Sum2(n,m(n))*P0(n)+sum
+    def Q(n):
+        return Nsr(n)/n
+    def Toch(n):
+        return L(n)/(n*nu)
+    l = []
+    q = []
+    toch = []
+    for i in range(1, channelmax):
+        L_ = float('{:.5f}'.format(L(i)))
+        l.append(L_)
+        Q_ = float('{:.5f}'.format(Q(i)))
+        q.append(Q_)
+        T_ = float('{:.5f}'.format(Toch(i)))
+        toch.append(T_)
+    print(Toch(10))
+    x = np.linspace(1, channelmax, channelmax-1)
+    ax = plt.subplot()
+    ax.grid()
+   # ax.plot(x, l, 'o-',x, q, 'o-',x, toch, 'o-')
+    #plt.legend(('1','2'), loc='upper right')
+
+    grafik()
+    z = [x for x in range(1, 13)]
+    plt.plot(z, l[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+    for i, j in zip(z, l):
+        plt.text(i, j, str(j))
+    plt.savefig('5_Длина_оч.png')
+
+    grafik()
+
+    plt.plot(z, q[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+    for i, j in zip(z, q):
+        plt.text(i, j, str(j))
+    plt.savefig('5_Коэффициента загрузки операторов в зависимости от числа каналов.png')
+
+    grafik()
+
+    plt.plot(z, toch[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+    for i, j in zip(z, toch):
+        plt.text(i, j, str(j))
+    plt.savefig('5_Математического ожидания времени пребывания клиентов.png')
+
+
+
+Lambda = 1 / Tc
+Nu = 1 / Ts
+a = Lambda / Nu
+
+fifth(a, Nu, Lambda, 14, Tw)
+
 
 '2 задание'
 
@@ -638,22 +763,25 @@ def solveSecondTask():
 
 solveSecondTask()
 
+print('Npost_list = ', Nprost_list)
+print('k_list = ', k_list)
+
 '''Построение графиков'''
 
 grafik()
 
-z = [x for x in range(1,17)]
+z = [x for x in range(1,38)]
 
-plt.plot(z, Nprost_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+plt.plot(z, Nprost_list[0:37], color='red', marker='o', linestyle='--', markerfacecolor='blue')
 for i,j in zip(z,Nprost_list):
     plt.text(i, j, str(j))
 plt.savefig('6(2)_Cреднее число простаивающих каналов.png')
 
 grafik()
 
-z = [x for x in range(1,17)]
+z = [x for x in range(1,38)]
 
-plt.plot(z, k_list[0:n], color='red', marker='o', linestyle='--', markerfacecolor='blue')
+plt.plot(z, k_list[0:37], color='red', marker='o', linestyle='--', markerfacecolor='blue')
 for i,j in zip(z, k_list):
     plt.text(i, j, str(j))
 plt.savefig('6(2)_Cреднее число занятых наладчиков.png')
